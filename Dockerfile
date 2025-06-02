@@ -1,16 +1,16 @@
-FROM judge0/compilers:1.4.0 AS production
+FROM compiler:1.0.0 AS production
 
-ENV JUDGE0_HOMEPAGE "https://judge0.com"
-LABEL homepage=$JUDGE0_HOMEPAGE
+# ENV JUDGE0_HOMEPAGE "https://judge0.com"
+LABEL homepage=""
 
-ENV JUDGE0_SOURCE_CODE "https://github.com/judge0/judge0"
+ENV JUDGE0_SOURCE_CODE="https://github.com/judge0/judge0"
 LABEL source_code=$JUDGE0_SOURCE_CODE
 
-ENV JUDGE0_MAINTAINER "Herman Zvonimir Došilović <hermanz.dosilovic@gmail.com>"
+ENV JUDGE0_MAINTAINER="Han Kyeol Kim <myrlagksruf@gmail.com>"
 LABEL maintainer=$JUDGE0_MAINTAINER
 
-ENV PATH "/usr/local/ruby-2.7.0/bin:/opt/.gem/bin:$PATH"
-ENV GEM_HOME "/opt/.gem/"
+ENV PATH="/usr/local/ruby-2.7.0/bin:/opt/.gem/bin:$PATH"
+ENV GEM_HOME="/opt/.gem/"
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -43,7 +43,7 @@ RUN useradd -u 1000 -m -r judge0 && \
 
 USER judge0
 
-ENV JUDGE0_VERSION "1.13.1"
+ENV JUDGE0_VERSION="1.0.0"
 LABEL version=$JUDGE0_VERSION
 
 
