@@ -312,8 +312,8 @@ RUN set -xe && \
 #     ln -s /lib/x86_64-linux-gnu/libreadline.so.7 /lib/x86_64-linux-gnu/libreadline.so.6
 
 # Check for latest version here: https://github.com/microsoft/TypeScript/releases
-ENV TYPESCRIPT_VERSIONS \
-      5.8.3
+# ENV TYPESCRIPT_VERSIONS \
+#       5.8.3
 RUN set -xe && \
     curl -fSsL "https://deb.nodesource.com/setup_22.x" | bash - && \
     apt-get update && \
@@ -528,7 +528,10 @@ RUN set -xe && \
     make -j$(nproc) install && \
     rm -rf /tmp/*
 
-    
+RUN set -xe && \
+    curl -fsSL https://bun.sh/install | bash && \
+    mv /root/.bun/bin/bun /usr/local/bin/bun && \
+    rm -rf /root/.bun
 
 RUN set -xe && \
     apt-get update && \

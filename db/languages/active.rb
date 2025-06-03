@@ -157,10 +157,10 @@
   },
   {
     id: 63,
-    name: "JavaScript (Node.js 22.16.0)",
+    name: "Bun (1.2.15)",
     is_archived: false,
-    source_file: "script.js",
-    run_cmd: "/usr/bin/node script.js"
+    source_file: "script.mjs",
+    run_cmd: "/usr/local/bin/bun script.mjs"
   },
   {
     id: 64,
@@ -239,11 +239,10 @@
   },
   {
     id: 74,
-    name: "TypeScript (5.8.3)",
+    name: "Bun (1.2.15)",
     is_archived: false,
     source_file: "script.ts",
-    compile_cmd: "/usr/bin/tsc %s script.ts",
-    run_cmd: "/usr/local/node-22.16.0/bin/node script.js"
+    run_cmd: "/usr/local/bin/bun script.ts"
   },
   {
     id: 75,
