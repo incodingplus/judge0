@@ -1,43 +1,29 @@
-FROM buildpack-deps:bullseye
+FROM buildpack-deps:bookworm
 
-# Check for latest version here: https://gcc.gnu.org/releases.html, https://ftpmirror.gnu.org/gcc
-ENV GCC_VERSIONS=15.1.0
+# clang-19 is the latest version available in Debian Bookworm
 RUN set -xe && \
-    for VERSION in $GCC_VERSIONS; do \
-      curl -fSsL "https://ftpmirror.gnu.org/gcc/gcc-$VERSION/gcc-$VERSION.tar.gz" -o /tmp/gcc-$VERSION.tar.gz && \
-      mkdir /tmp/gcc-$VERSION && \
-      tar -xf /tmp/gcc-$VERSION.tar.gz -C /tmp/gcc-$VERSION --strip-components=1 && \
-      rm /tmp/gcc-$VERSION.tar.gz && \
-      cd /tmp/gcc-$VERSION && \
-      ./contrib/download_prerequisites && \
-      { rm *.tar.* || true; } && \
-      tmpdir="$(mktemp -d)" && \
-      cd "$tmpdir"; \
-      /tmp/gcc-$VERSION/configure \
-        --disable-multilib \
-        --enable-languages=c,c++ \
-        --prefix=/usr/local/gcc-$VERSION && \
-      make -j$(nproc) && \
-      make -j$(nproc) install-strip && \
-      rm -rf /tmp/*; \
-    done
+  apt update && \
+  apt install -y clang-19 libc++-19-dev libc++abi-19-dev && \
+  rm -rf /var/lib/apt/lists/* && \
+  apt clean
 
-# Check for latest version here: https://www.ruby-lang.org/en/downloads
-ENV RUBY_VERSIONS=2.7.0
 RUN set -xe && \
-    for VERSION in $RUBY_VERSIONS; do \
-      curl -fSsL "https://cache.ruby-lang.org/pub/ruby/${VERSION%.*}/ruby-$VERSION.tar.gz" -o /tmp/ruby-$VERSION.tar.gz && \
-      mkdir /tmp/ruby-$VERSION && \
-      tar -xf /tmp/ruby-$VERSION.tar.gz -C /tmp/ruby-$VERSION --strip-components=1 && \
-      rm /tmp/ruby-$VERSION.tar.gz && \
-      cd /tmp/ruby-$VERSION && \
-      ./configure \
-        --disable-install-doc \
-        --prefix=/usr/local/ruby-$VERSION && \
-      make -j$(nproc) && \
-      make -j$(nproc) install && \
-      rm -rf /tmp/*; \
-    done
+  mkdir -p /tmp/openssl && \
+  cd /tmp/openssl && \
+  wget https://github.com/openssl/openssl/releases/download/OpenSSL_1_1_1w/openssl-1.1.1w.tar.gz && \
+  tar -xf openssl-1.1.1w.tar.gz && \
+  cd openssl-1.1.1w && \
+  ./config --prefix=/usr/local/openssl-1.1.1w --openssldir=/usr/local/openssl-1.1.1w && \
+  make -j$(nproc) && \
+  make -j$(nproc) install && \
+  rm -rf /usr/local/openssl-1.1.1w/certs && \
+  ln -s /etc/ssl/certs /usr/local/openssl-1.1.1w/certs && \
+  rm -rf /tmp/*
+
+
+RUN curl -sSL https://get.rvm.io | bash && \
+    bash -c "source /usr/local/rvm/scripts/rvm && \
+    rvm install ruby-2.7.8 --with-openssl-dir=/usr/local/openssl-1.1.1w"
 
 # Check for latest version here: https://www.python.org/downloads
 ENV PYTHON_VERSIONS=3.13.3
@@ -545,9 +531,8 @@ RUN set -xe && \
     git clone https://github.com/incodingplus/isolate /tmp/isolate && \
     cd /tmp/isolate && \
     make -j$(nproc) install isolate && \
-    mv /tmp/isolate/isolate /usr/local/bin/isolate && \
     rm -rf /tmp/*
 ENV BOX_ROOT=/var/local/lib/isolate
 
 LABEL maintainer="Han Kyeol Kim <myrlagksruf@gmail.com>"
-LABEL version="1.0.1"
+LABEL version="1.0.2"

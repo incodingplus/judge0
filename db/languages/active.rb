@@ -56,10 +56,10 @@
   },
   {
     id: 50,
-    name: "C (GCC 15.1.0)",
+    name: "C (Clang 19.1.4)",
     is_archived: false,
     source_file: "main.c",
-    compile_cmd: "/usr/local/gcc-15.1.0/bin/gcc %s main.c",
+    compile_cmd: "/usr/bin/clang-19 %s main.c",
     run_cmd: "./a.out"
   },
   {
@@ -88,11 +88,11 @@
   },
   {
     id: 54,
-    name: "C++ (GCC 15.1.0)",
+    name: "C++ (Clang 19.1.4)",
     is_archived: false,
     source_file: "main.cpp",
-    compile_cmd: "/usr/local/gcc-15.1.0/bin/g++ %s main.cpp",
-    run_cmd: "LD_LIBRARY_PATH=/usr/local/gcc-15.1.0/lib64 ./a.out"
+    compile_cmd: "/usr/bin/clang++-19 %s main.cpp",
+    run_cmd: "./a.out"
   },
   {
     id: 55,

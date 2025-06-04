@@ -7,9 +7,10 @@ x-logging:
 
 services:
   server:
-    image: judge0:1.0.0
+    image: incodingplus/judge0:1.0.2
     volumes:
       - ./judge0.conf:/judge0.conf:ro
+      # - /sys/fs/cgroup:/sys/fs/cgroup:rw
     command: ["/api/scripts/server"]
     ports:
       - "2358:2358"
@@ -18,10 +19,11 @@ services:
     restart: always
 
   worker:
-    image: judge0:1.0.0
+    image: incodingplus/judge0:1.0.2
     command: ["./scripts/workers"]
     volumes:
       - ./judge0.conf:/judge0.conf:ro
+      # - /sys/fs/cgroup:/sys/fs/cgroup:rw
     privileged: true
     <<: *default-logging
     restart: always

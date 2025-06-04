@@ -1,4 +1,4 @@
-FROM incodingplus/compilers:1.0.1 AS production
+FROM incodingplus/compilers:bookworm AS production
 
 # ENV JUDGE0_HOMEPAGE "https://judge0.com"
 LABEL homepage=""
@@ -9,7 +9,7 @@ LABEL source_code=$JUDGE0_SOURCE_CODE
 ENV JUDGE0_MAINTAINER="Han Kyeol Kim <myrlagksruf@gmail.com>"
 LABEL maintainer=$JUDGE0_MAINTAINER
 
-ENV PATH="/usr/local/ruby-2.7.0/bin:/opt/.gem/bin:$PATH"
+ENV PATH="/usr/local/rvm/rubies/ruby-2.7.8/bin:/opt/.gem/bin:$PATH"
 ENV GEM_HOME="/opt/.gem/"
 
 RUN apt-get update && \
@@ -43,7 +43,7 @@ RUN useradd -u 1000 -m -r judge0 && \
 
 USER judge0
 
-ENV JUDGE0_VERSION="1.0.1"
+ENV JUDGE0_VERSION="1.0.2"
 LABEL version=$JUDGE0_VERSION
 
 

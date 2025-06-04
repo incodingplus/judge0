@@ -53,8 +53,8 @@ class IsolateJob < ApplicationJob
 
   def initialize_workdir
     @box_id = submission.id%2147483647
-    @cgroups = (!submission.enable_per_process_and_thread_time_limit || !submission.enable_per_process_and_thread_memory_limit) ? "--cg" : ""
-    @workdir = `sudo isolate #{cgroups} -b #{box_id} --init`.chomp
+    @cgroups = ""
+    @workdir = `isolate #{cgroups} -b #{box_id} --init`.chomp
     @boxdir = workdir + "/box"
     @tmpdir = workdir + "/tmp"
     @source_file = boxdir + "/" + submission.language.source_file.to_s
@@ -83,7 +83,7 @@ class IsolateJob < ApplicationJob
 
     File.open(additional_files_archive_file, "wb") { |f| f.write(submission.additional_files) }
 
-    command = "sudo isolate #{cgroups} \
+    command = "isolate #{cgroups} \
     -s \
     -b #{box_id} \
     --stderr-to-stdout \
@@ -92,8 +92,7 @@ class IsolateJob < ApplicationJob
     -w 4 \
     -k #{Config::MAX_STACK_LIMIT} \
     -p#{Config::MAX_MAX_PROCESSES_AND_OR_THREADS} \
-    #{submission.enable_per_process_and_thread_time_limit ? (cgroups.present? ? "--no-cg-timing" : "") : "--cg-timing"} \
-    #{submission.enable_per_process_and_thread_memory_limit ? "-m " : "--cg-mem="}#{Config::MAX_MEMORY_LIMIT} \
+    -m #{Config::MAX_MEMORY_LIMIT} \
     -f #{Config::MAX_EXTRACT_SIZE} \
     --run \
     -- /usr/bin/unzip -n -qq #{ADDITIONAL_FILES_ARCHIVE_FILE_NAME} \
@@ -138,7 +137,7 @@ class IsolateJob < ApplicationJob
     compile_output_file = workdir + "/" + "compile_output.txt"
     initialize_file(compile_output_file)
 
-    command = "sudo isolate #{cgroups} \
+    command = "isolate #{cgroups} \
     -s \
     -b #{box_id} \
     -M #{metadata_file} \
@@ -149,8 +148,7 @@ class IsolateJob < ApplicationJob
     -w #{Config::MAX_WALL_TIME_LIMIT} \
     -k #{Config::MAX_STACK_LIMIT} \
     -p#{Config::MAX_MAX_PROCESSES_AND_OR_THREADS} \
-    #{submission.enable_per_process_and_thread_time_limit ? (cgroups.present? ? "--no-cg-timing" : "") : "--cg-timing"} \
-    #{submission.enable_per_process_and_thread_memory_limit ? "-m " : "--cg-mem="}#{Config::MAX_MEMORY_LIMIT} \
+    -m #{Config::MAX_MEMORY_LIMIT} \
     -f #{Config::MAX_MAX_FILE_SIZE} \
     -E HOME=/tmp \
     -E PATH=\"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\" \
@@ -219,7 +217,7 @@ class IsolateJob < ApplicationJob
       File.open(run_script, "w") { |f| f.write("#{submission.language.run_cmd} #{command_line_arguments}")}
     end
 
-    command = "sudo isolate #{cgroups} \
+    command = "isolate #{cgroups} \
     -s \
     -b #{box_id} \
     -M #{metadata_file} \
@@ -230,8 +228,7 @@ class IsolateJob < ApplicationJob
     -w #{submission.wall_time_limit} \
     -k #{submission.stack_limit} \
     -p#{submission.max_processes_and_or_threads} \
-    #{submission.enable_per_process_and_thread_time_limit ? (cgroups.present? ? "--no-cg-timing" : "") : "--cg-timing"} \
-    #{submission.enable_per_process_and_thread_memory_limit ? "-m " : "--cg-mem="}#{submission.memory_limit} \
+    -m #{submission.memory_limit} \
     -f #{submission.max_file_size} \
     -E HOME=/tmp \
     -E PATH=\"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\" \
@@ -297,7 +294,7 @@ class IsolateJob < ApplicationJob
     [stdin_file, stdout_file, stderr_file, metadata_file].each do |f|
       `sudo rm -rf #{f}`
     end
-    `sudo isolate #{cgroups} -b #{box_id} --cleanup`
+    `isolate #{cgroups} -b #{box_id} --cleanup`
     raise "Cleanup of sandbox #{box_id} failed." if raise_exception && Dir.exists?(workdir)
   end
 
