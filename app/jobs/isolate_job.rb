@@ -54,7 +54,7 @@ class IsolateJob < ApplicationJob
   def initialize_workdir
     @box_id = submission.id%2147483647
     @cgroups = (!submission.enable_per_process_and_thread_time_limit || !submission.enable_per_process_and_thread_memory_limit) ? "--cg" : ""
-    @workdir = `isolate #{cgroups} -b #{box_id} --init`.chomp
+    @workdir = `sudo isolate #{cgroups} -b #{box_id} --init`.chomp
     @boxdir = workdir + "/box"
     @tmpdir = workdir + "/tmp"
     @source_file = boxdir + "/" + submission.language.source_file.to_s
@@ -83,7 +83,7 @@ class IsolateJob < ApplicationJob
 
     File.open(additional_files_archive_file, "wb") { |f| f.write(submission.additional_files) }
 
-    command = "isolate #{cgroups} \
+    command = "sudo isolate #{cgroups} \
     -s \
     -b #{box_id} \
     --stderr-to-stdout \
@@ -138,7 +138,7 @@ class IsolateJob < ApplicationJob
     compile_output_file = workdir + "/" + "compile_output.txt"
     initialize_file(compile_output_file)
 
-    command = "isolate #{cgroups} \
+    command = "sudo isolate #{cgroups} \
     -s \
     -b #{box_id} \
     -M #{metadata_file} \
@@ -219,7 +219,7 @@ class IsolateJob < ApplicationJob
       File.open(run_script, "w") { |f| f.write("#{submission.language.run_cmd} #{command_line_arguments}")}
     end
 
-    command = "isolate #{cgroups} \
+    command = "sudo isolate #{cgroups} \
     -s \
     -b #{box_id} \
     -M #{metadata_file} \
@@ -297,7 +297,7 @@ class IsolateJob < ApplicationJob
     [stdin_file, stdout_file, stderr_file, metadata_file].each do |f|
       `sudo rm -rf #{f}`
     end
-    `isolate #{cgroups} -b #{box_id} --cleanup`
+    `sudo isolate #{cgroups} -b #{box_id} --cleanup`
     raise "Cleanup of sandbox #{box_id} failed." if raise_exception && Dir.exists?(workdir)
   end
 

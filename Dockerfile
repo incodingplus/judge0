@@ -1,9 +1,9 @@
-FROM compiler:1.0.0 AS production
+FROM incodingplus/compilers:1.0.1 AS production
 
 # ENV JUDGE0_HOMEPAGE "https://judge0.com"
 LABEL homepage=""
 
-ENV JUDGE0_SOURCE_CODE="https://github.com/judge0/judge0"
+ENV JUDGE0_SOURCE_CODE="https://github.com/incodingplus/judge0"
 LABEL source_code=$JUDGE0_SOURCE_CODE
 
 ENV JUDGE0_MAINTAINER="Han Kyeol Kim <myrlagksruf@gmail.com>"
@@ -43,7 +43,7 @@ RUN useradd -u 1000 -m -r judge0 && \
 
 USER judge0
 
-ENV JUDGE0_VERSION="1.0.0"
+ENV JUDGE0_VERSION="1.0.1"
 LABEL version=$JUDGE0_VERSION
 
 
