@@ -1,8 +1,7 @@
 FROM buildpack-deps:bullseye
 
 # Check for latest version here: https://gcc.gnu.org/releases.html, https://ftpmirror.gnu.org/gcc
-ENV GCC_VERSIONS \
-      15.1.0
+ENV GCC_VERSIONS=15.1.0
 RUN set -xe && \
     for VERSION in $GCC_VERSIONS; do \
       curl -fSsL "https://ftpmirror.gnu.org/gcc/gcc-$VERSION/gcc-$VERSION.tar.gz" -o /tmp/gcc-$VERSION.tar.gz && \
@@ -24,8 +23,7 @@ RUN set -xe && \
     done
 
 # Check for latest version here: https://www.ruby-lang.org/en/downloads
-ENV RUBY_VERSIONS \
-      2.7.0
+ENV RUBY_VERSIONS=2.7.0
 RUN set -xe && \
     for VERSION in $RUBY_VERSIONS; do \
       curl -fSsL "https://cache.ruby-lang.org/pub/ruby/${VERSION%.*}/ruby-$VERSION.tar.gz" -o /tmp/ruby-$VERSION.tar.gz && \
@@ -42,8 +40,7 @@ RUN set -xe && \
     done
 
 # Check for latest version here: https://www.python.org/downloads
-ENV PYTHON_VERSIONS \
-      3.13.3
+ENV PYTHON_VERSIONS=3.13.3
 RUN set -xe && \
     for VERSION in $PYTHON_VERSIONS; do \
       curl -fSsL "https://www.python.org/ftp/python/$VERSION/Python-$VERSION.tar.xz" -o /tmp/python-$VERSION.tar.xz && \
@@ -89,8 +86,7 @@ RUN set -xe && \
     ln -s /usr/local/openjdk24/bin/jar /usr/local/bin/jar
 
 # Check for latest version here: https://ftpmirror.gnu.org/bash
-ENV BASH_VERSIONS \
-      5.2.37
+ENV BASH_VERSIONS=5.2.37
 RUN set -xe && \
     for VERSION in $BASH_VERSIONS; do \
       curl -fSsL "https://ftpmirror.gnu.org/bash/bash-$VERSION.tar.gz" -o /tmp/bash-$VERSION.tar.gz && \
@@ -543,14 +539,15 @@ ENV LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8
 
 RUN set -xe && \
     apt-get update && \
-    apt-get install -y --no-install-recommends git libcap-dev && \
+    apt-get install -y --no-install-recommends git pkg-config libcap-dev libsystemd-dev && \
     rm -rf /var/lib/apt/lists/* && \
-    git clone https://github.com/judge0/isolate.git /tmp/isolate && \
+    apt clean -y && \
+    git clone https://github.com/incodingplus/isolate /tmp/isolate && \
     cd /tmp/isolate && \
-    git checkout ad39cc4d0fbb577fb545910095c9da5ef8fc9a1a && \
-    make -j$(nproc) install && \
+    make -j$(nproc) install isolate && \
+    mv /tmp/isolate/isolate /usr/local/bin/isolate && \
     rm -rf /tmp/*
-ENV BOX_ROOT /var/local/lib/isolate
+ENV BOX_ROOT=/var/local/lib/isolate
 
 LABEL maintainer="Han Kyeol Kim <myrlagksruf@gmail.com>"
-LABEL version="1.0.0"
+LABEL version="1.0.1"
