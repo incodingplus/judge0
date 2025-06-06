@@ -1,0 +1,9 @@
+POST http://localhost:2358/submissions?base64_encoded=false&wait=true
+Content-Type: application/json; charset=utf-8
+
+{
+    "source_code":"print(input())",
+    "language_id":71,
+    "time":1,
+    "stdin":"한글이야 시발아"
+}
