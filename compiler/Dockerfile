@@ -29,7 +29,7 @@ RUN curl -sSL https://get.rvm.io | bash && \
 ENV PYTHON_VERSIONS=3.13.3
 RUN set -xe && \
     for VERSION in $PYTHON_VERSIONS; do \
-      curl -fSsL "https://www.python.org/ftp/python/$VERSION/Python-$VERSION.tar.xz" -o /tmp/python-$VERSION.tar.xz && \
+      wget "https://www.python.org/ftp/python/$VERSION/Python-$VERSION.tar.xz" -O /tmp/python-$VERSION.tar.xz && \
       mkdir /tmp/python-$VERSION && \
       tar -xf /tmp/python-$VERSION.tar.xz -C /tmp/python-$VERSION --strip-components=1 && \
       rm /tmp/python-$VERSION.tar.xz && \
@@ -45,8 +45,8 @@ RUN set -xe && \
 # ENV OCTAVE_VERSIONS \
 #       5.1.0
 # RUN set -xe && \
-#     apt-get update && \
-#     apt-get install -y --no-install-recommends gfortran libblas-dev liblapack-dev libpcre3-dev && \
+#     apt update && \
+#     apt install -y --no-install-recommends gfortran libblas-dev liblapack-dev libpcre3-dev && \
 #     rm -rf /var/lib/apt/lists/* && \
 #     for VERSION in $OCTAVE_VERSIONS; do \
 #       curl -fSsL "https://ftp.gnu.org/gnu/octave/octave-$VERSION.tar.gz" -o /tmp/octave-$VERSION.tar.gz && \
@@ -63,7 +63,7 @@ RUN set -xe && \
 
 # Check for latest version here: https://jdk.java.net
 RUN set -xe && \
-    curl -fSsL "https://download.java.net/java/GA/jdk24.0.1/24a58e0e276943138bf3e963e6291ac2/9/GPL/openjdk-24.0.1_linux-x64_bin.tar.gz" -o /tmp/openjdk24.tar.gz && \
+    wget "https://download.java.net/java/GA/jdk24.0.1/24a58e0e276943138bf3e963e6291ac2/9/GPL/openjdk-24.0.1_linux-x64_bin.tar.gz" -O /tmp/openjdk24.tar.gz && \
     mkdir /usr/local/openjdk24 && \
     tar -xf /tmp/openjdk24.tar.gz -C /usr/local/openjdk24 --strip-components=1 && \
     rm /tmp/openjdk24.tar.gz && \
@@ -75,7 +75,7 @@ RUN set -xe && \
 ENV BASH_VERSIONS=5.2.37
 RUN set -xe && \
     for VERSION in $BASH_VERSIONS; do \
-      curl -fSsL "https://ftpmirror.gnu.org/bash/bash-$VERSION.tar.gz" -o /tmp/bash-$VERSION.tar.gz && \
+      wget "https://ftpmirror.gnu.org/bash/bash-$VERSION.tar.gz" -O /tmp/bash-$VERSION.tar.gz && \
       mkdir /tmp/bash-$VERSION && \
       tar -xf /tmp/bash-$VERSION.tar.gz -C /tmp/bash-$VERSION --strip-components=1 && \
       rm /tmp/bash-$VERSION.tar.gz && \
@@ -105,8 +105,8 @@ RUN set -xe && \
 # ENV HASKELL_VERSIONS \
 #       8.8.1
 # RUN set -xe && \
-#     apt-get update && \
-#     apt-get install -y --no-install-recommends libgmp-dev libtinfo5 && \
+#     apt update && \
+#     apt install -y --no-install-recommends libgmp-dev libtinfo5 && \
 #     rm -rf /var/lib/apt/lists/* && \
 #     for VERSION in $HASKELL_VERSIONS; do \
 #       curl -fSsL "https://downloads.haskell.org/~ghc/$VERSION/ghc-$VERSION-x86_64-deb8-linux.tar.xz" -o /tmp/ghc-$VERSION.tar.xz && \
@@ -124,8 +124,8 @@ RUN set -xe && \
 # ENV MONO_VERSIONS \
 #       6.6.0.161
 # RUN set -xe && \
-#     apt-get update && \
-#     apt-get install -y --no-install-recommends cmake && \
+#     apt update && \
+#     apt install -y --no-install-recommends cmake && \
 #     rm -rf /var/lib/apt/lists/* && \
 #     for VERSION in $MONO_VERSIONS; do \
 #       curl -fSsL "https://download.mono-project.com/sources/mono/mono-$VERSION.tar.xz" -o /tmp/mono-$VERSION.tar.xz && \
@@ -161,8 +161,8 @@ RUN set -xe && \
 # ENV ERLANG_VERSIONS \
 #       22.2
 # RUN set -xe && \
-#     apt-get update && \
-#     apt-get install -y --no-install-recommends unzip && \
+#     apt update && \
+#     apt install -y --no-install-recommends unzip && \
 #     rm -rf /var/lib/apt/lists/* && \
 #     for VERSION in $ERLANG_VERSIONS; do \
 #       curl -fSsL "https://github.com/erlang/otp/archive/OTP-$VERSION.tar.gz" -o /tmp/erlang-$VERSION.tar.gz && \
@@ -183,8 +183,8 @@ RUN set -xe && \
 # ENV ELIXIR_VERSIONS \
 #       1.9.4
 # RUN set -xe && \
-#     apt-get update && \
-#     apt-get install -y --no-install-recommends unzip && \
+#     apt update && \
+#     apt install -y --no-install-recommends unzip && \
 #     rm -rf /var/lib/apt/lists/* && \
 #     for VERSION in $ELIXIR_VERSIONS; do \
 #       curl -fSsL "https://github.com/elixir-lang/elixir/releases/download/v$VERSION/Precompiled.zip" -o /tmp/elixir-$VERSION.zip && \
@@ -252,8 +252,8 @@ RUN set -xe && \
 # ENV PHP_VERSIONS \
 #       7.4.1
 # RUN set -xe && \
-#     apt-get update && \
-#     apt-get install -y --no-install-recommends bison re2c && \
+#     apt update && \
+#     apt install -y --no-install-recommends bison re2c && \
 #     rm -rf /var/lib/apt/lists/* && \
 #     for VERSION in $PHP_VERSIONS; do \
 #       curl -fSsL "https://codeload.github.com/php/php-src/tar.gz/php-$VERSION" -o /tmp/php-$VERSION.tar.gz && \
@@ -294,16 +294,15 @@ RUN set -xe && \
 #     ln -s /lib/x86_64-linux-gnu/libreadline.so.7 /lib/x86_64-linux-gnu/libreadline.so.6
 
 # Check for latest version here: https://github.com/microsoft/TypeScript/releases
-# ENV TYPESCRIPT_VERSIONS \
-#       5.8.3
+# ENV TYPESCRIPT_VERSIONS=5.8.3
 RUN set -xe && \
     curl -fSsL "https://deb.nodesource.com/setup_22.x" | bash - && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends nodejs && \
-    rm -rf /var/lib/apt/lists/* && \
-    for VERSION in $TYPESCRIPT_VERSIONS; do \
-      npm install -g typescript@$VERSION; \
-    done
+    apt update && \
+    apt install -y --no-install-recommends nodejs && \
+    rm -rf /var/lib/apt/lists/*
+    # for VERSION in $TYPESCRIPT_VERSIONS; do \
+    #   npm install -g typescript@$VERSION; \
+    # done
 
 # Check for latest version here: https://nasm.us
 # ENV NASM_VERSIONS \
@@ -346,8 +345,8 @@ RUN set -xe && \
 # ENV SBCL_VERSIONS \
 #       2.0.0
 # RUN set -xe && \
-#     apt-get update && \
-#     apt-get install -y --no-install-recommends bison re2c && \
+#     apt update && \
+#     apt install -y --no-install-recommends bison re2c && \
 #     rm -rf /var/lib/apt/lists/* && \
 #     for VERSION in $SBCL_VERSIONS; do \
 #       curl -fSsL "https://downloads.sourceforge.net/project/sbcl/sbcl/$VERSION/sbcl-$VERSION-x86-64-linux-binary.tar.bz2" -o /tmp/sbcl-$VERSION.tar.bz2 && \
@@ -380,8 +379,8 @@ RUN set -xe && \
 # ENV SWIFT_VERSIONS \
 #       5.2.3
 # RUN set -xe && \
-#     apt-get update && \
-#     apt-get install -y --no-install-recommends libncurses5 && \
+#     apt update && \
+#     apt install -y --no-install-recommends libncurses5 && \
 #     rm -rf /var/lib/apt/lists/* && \
 #     for VERSION in $SWIFT_VERSIONS; do \
 #       curl -fSsL "https://swift.org/builds/swift-$VERSION-release/ubuntu1804/swift-$VERSION-RELEASE/swift-$VERSION-RELEASE-ubuntu18.04.tar.gz" -o /tmp/swift-$VERSION.tar.gz && \
@@ -408,8 +407,8 @@ RUN set -xe && \
 # installation of Mono (see above).
 # ENV MONO_VERSION 6.6.0.161
 # RUN set -xe && \
-#     apt-get update && \
-#     apt-get install -y --no-install-recommends gnupg dirmngr && \
+#     apt update && \
+#     apt install -y --no-install-recommends gnupg dirmngr && \
 #     rm -rf /var/lib/apt/lists/* && \
 #     export GNUPGHOME="$(mktemp -d)" && \
 #     gpg --batch --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF && \
@@ -417,25 +416,25 @@ RUN set -xe && \
 #     gpgconf --kill all && \
 #     rm -rf "$GNUPGHOME" && \
 #     apt-key list | grep Xamarin && \
-#     apt-get purge -y --auto-remove gnupg dirmngr && \
+#     apt purge -y --auto-remove gnupg dirmngr && \
 #     echo "deb http://download.mono-project.com/repo/debian stable-stretch/snapshots/$MONO_VERSION main" > /etc/apt/sources.list.d/mono-official-stable.list && \
-#     apt-get update && \
-#     apt-get install -y --no-install-recommends mono-vbnc && \
+#     apt update && \
+#     apt install -y --no-install-recommends mono-vbnc && \
 #     rm -rf /var/lib/apt/lists/* /tmp/*
 
 # Check for latest version here: https://packages.debian.org/buster/clang-7
 # Used for additional compilers for C, C++ and used for Objective-C.
 # RUN set -xe && \
-#     apt-get update && \
-#     apt-get install -y --no-install-recommends clang-7 gnustep-devel && \
+#     apt update && \
+#     apt install -y --no-install-recommends clang-7 gnustep-devel && \
 #     rm -rf /var/lib/apt/lists/*
 
 # Check for latest version here: https://cloud.r-project.org/src/base
 # ENV R_VERSIONS \
 #       4.0.0
 # RUN set -xe && \
-#     apt-get update && \
-#     apt-get install -y --no-install-recommends libpcre2-dev && \
+#     apt update && \
+#     apt install -y --no-install-recommends libpcre2-dev && \
 #     rm -rf /var/lib/apt/lists/* && \
 #     for VERSION in $R_VERSIONS; do \
 #       curl -fSsL "https://cloud.r-project.org/src/base/R-4/R-$VERSION.tar.gz" -o /tmp/r-$VERSION.tar.gz && \
@@ -453,8 +452,8 @@ RUN set -xe && \
 # Check for latest version here: https://packages.debian.org/buster/sqlite3
 # Used for support of SQLite.
 # RUN set -xe && \
-#     apt-get update && \
-#     apt-get install -y --no-install-recommends sqlite3 && \
+#     apt update && \
+#     apt install -y --no-install-recommends sqlite3 && \
 #     rm -rf /var/lib/apt/lists/*
 
 # Check for latest version here: https://scala-lang.org
@@ -473,8 +472,8 @@ RUN set -xe && \
 # Check for latest version here: https://github.com/clojure/clojure/releases
 # ENV CLOJURE_VERSION 1.10.1
 # RUN set -xe && \
-#     apt-get update && \
-#     apt-get install -y --no-install-recommends maven && \
+#     apt update && \
+#     apt install -y --no-install-recommends maven && \
 #     cd /tmp && \
 #     git clone https://github.com/clojure/clojure && \
 #     cd clojure && \
@@ -482,7 +481,7 @@ RUN set -xe && \
 #     mvn -Plocal -Dmaven.test.skip=true package && \
 #     mkdir /usr/local/clojure-$CLOJURE_VERSION && \
 #     cp clojure.jar /usr/local/clojure-$CLOJURE_VERSION && \
-#     apt-get remove --purge -y maven && \
+#     apt remove --purge -y maven && \
 #     rm -rf /var/lib/apt/lists/* /tmp/*
 
 # Check for latest version here: https://github.com/dotnet/sdk/releases
@@ -499,7 +498,7 @@ RUN set -xe && \
 #     rm -rf /tmp/*
 
 RUN set -xe && \
-    curl -fSsL "https://www.sqlite.org/2025/sqlite-autoconf-3500000.tar.gz" -o /tmp/sqlite.tar.gz && \
+    wget "https://www.sqlite.org/2025/sqlite-autoconf-3500000.tar.gz" -O /tmp/sqlite.tar.gz && \
     mkdir /tmp/sqlite && \
     tar -xf /tmp/sqlite.tar.gz -C /tmp/sqlite --strip-components=1 && \
     rm /tmp/sqlite.tar.gz && \
@@ -511,21 +510,16 @@ RUN set -xe && \
     rm -rf /tmp/*
 
 RUN set -xe && \
-    curl -fsSL https://bun.sh/install | bash && \
-    mv /root/.bun/bin/bun /usr/local/bin/bun && \
-    rm -rf /root/.bun
-
-RUN set -xe && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends locales && \
+    apt update && \
+    apt install -y --no-install-recommends locales && \
     rm -rf /var/lib/apt/lists/* && \
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
     locale-gen
 ENV LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8
 
 RUN set -xe && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends git pkg-config libcap-dev libsystemd-dev && \
+    apt update && \
+    apt install -y --no-install-recommends git pkg-config libcap-dev libsystemd-dev && \
     rm -rf /var/lib/apt/lists/* && \
     apt clean -y && \
     git clone https://github.com/incodingplus/isolate /tmp/isolate && \
@@ -535,4 +529,4 @@ RUN set -xe && \
 ENV BOX_ROOT=/var/local/lib/isolate
 
 LABEL maintainer="Han Kyeol Kim <myrlagksruf@gmail.com>"
-LABEL version="1.0.2"
+LABEL version="1.0.3"

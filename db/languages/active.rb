@@ -157,10 +157,10 @@
   },
   {
     id: 63,
-    name: "Bun (1.2.15)",
+    name: "Node (22.16.0)",
     is_archived: false,
     source_file: "script.mjs",
-    run_cmd: "/usr/local/bin/bun script.mjs"
+    run_cmd: "/usr/bin/node --jitless script.mjs"
   },
   {
     id: 64,
@@ -239,10 +239,11 @@
   },
   {
     id: 74,
-    name: "Bun (1.2.15)",
-    is_archived: false,
+    name: "Node (22.16.0)",
+    is_archived: true,
     source_file: "script.ts",
-    run_cmd: "/usr/local/bin/bun script.ts"
+    compile_cmd: "/usr/bin/tsc %s script.ts",
+    run_cmd: "/usr/bin/node --jitless script.js"
   },
   {
     id: 75,

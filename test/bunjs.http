@@ -1,0 +1,9 @@
+POST http://localhost:2358/submissions?base64_encoded=false&wait=false
+Content-Type: application/json; charset=utf-8
+
+{
+    "source_code":"console.log(40)",
+    "language_id":74,
+    "time":1000,
+    "memory_limit":1024000
+}
